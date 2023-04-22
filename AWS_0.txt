@@ -1,0 +1,38 @@
+AWS:
+------------------------------------------------------------------------------------------------------
+16/04/2023
+-------------
+--aws free tier account
+https://aws.amazon.com/free/?trk=09863622-0e2a-4080-9bba-12d378e294ba&sc_channel=ps&ef_id=Cj0KCQjwi46iBhDyARIsAE3nVrZOgIvijk2GXa93CUSbSOjCfZdvx_X5Pr0IB8aQAgXxvr2jYwM9ot0aAlB1EALw_wcB:G:s&s_kwcid=AL!4422!3!453325184854!e!!g!!aws%20free%20tier!10712784862!111477280251&all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all
+
+tier type : 12 months free/always free
+
+---------------------
+--S3
+Create bucket -> bigdata-s3-bucket-batch2 , mumbai region , tag:(environment - dev)
+1.upload -> add files -> browse and select file
+2.Create folder -> folder2 -> file.csv
+
+--lamda
+Create function -> batch2-lamda-demo. python 3.9
+1.General Configuration
+basic setting -> timeout: 15 min -> save
+
+2.code source : lambda_function.py
+configure test event -> test-function, event json ( "m" : 10 , "n" : 5)
+
+
+
+
+
+
+info of any resource/object:
+s3 URL: s3:///bucket-name/directory-path/datafile.csv (here key = directory-path/datafile.csv)
+ARN(Amazon Resource Name) - address of a resource which can be used for establishing connection or for blocking purposes
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------
