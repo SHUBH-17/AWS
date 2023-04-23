@@ -9,12 +9,12 @@ tier type : 12 months free/always free
 
 ---------------------
 --S3
-Create bucket -> bigdata-s3-bucket-batch2 , mumbai region , tag:(environment - dev)
+Create bucket -> bigdata-s3-bucket-batch2 , mumbai region , tag:(key:environment - Value:dev)
 1.upload -> add files -> browse and select file
 2.Create folder -> folder2 -> file.csv
 
 --lamda
-Create function -> batch2-lamda-demo. python 3.9
+Create function (mumbai region) -> batch2-lamda-demo, python 3.9
 1.General Configuration
 basic setting -> timeout: 15 min -> save
 
@@ -22,14 +22,39 @@ basic setting -> timeout: 15 min -> save
 configure test event -> test-function, event json ( "m" : 10 , "n" : 5)
 
 
-
-
-
-
 info of any resource/object:
 s3 URL: s3:///bucket-name/directory-path/datafile.csv (here key = directory-path/datafile.csv)
 ARN(Amazon Resource Name) - address of a resource which can be used for establishing connection or for blocking purposes
 
+-------------
+22/04/2023
+-------------
+
+1.Create function (mumbai region) -> lamdaDemo, python 3.9 (15 min timeout) -> save
+Open lambda function and write the code (https://github.com/SHUBH-17/AWS/blob/main/access_s3_in_lambda.py) ->deploy
+lambda->layers->add layer-> choose pandas and it's version ->add
+
+2.s3 bucket -> bucket name -> properties -> event notification 
+create event notification -> send-notification-to-s3, types: all object create events, lamda function: give arn or name of above function-> save
+
+3.open IAM -> roles -> copy/select lambda role -> add permission (attach policy:s3fullaccess)
+
+4.s3 bucket -> bucket name -> upload -> employees.csv
+
+5.Open lambda function and check logs (Monitor) (use json formatter on web to visualize the json data from the log)
+
+
+
+
+
+
+Notes:
+1.lambda has memory constraint and timeout constraint (15 min limit) and thats why cannot be used for heavy computation and loading high volume data.
+(use lambda function to handle other libraries for triggering a job to do such heavy computaion and data load for any event driven pipeline)
+
+
+documentation links:
+https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-examples.html
 
 
 
