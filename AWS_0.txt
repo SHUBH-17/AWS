@@ -29,6 +29,9 @@ ARN(Amazon Resource Name) - address of a resource which can be used for establis
 -------------
 22/04/2023
 -------------
+S3 Bucket,Lambda function,IAM
+
+# Creating a lambda function which triggers as soon as a file lands/uploaded to a s3 bucket (event driven pipeline).
 
 1.Create function (mumbai region) -> lamdaDemo, python 3.9 (15 min timeout) -> save
 Open lambda function and write the code (https://github.com/SHUBH-17/AWS/blob/main/access_s3_in_lambda.py) ->deploy
@@ -37,17 +40,58 @@ lambda->layers->add layer-> choose pandas and it's version ->add
 2.s3 bucket -> bucket name -> properties -> event notification 
 create event notification -> send-notification-to-s3, types: all object create events, lamda function: give arn or name of above function-> save
 
-3.open IAM -> roles -> copy/select lambda role -> add permission (attach policy:s3fullaccess)
+3.open IAM -> roles -> copy/select lambda role -> add permission (attach policy:s3FullAccess)
 
 4.s3 bucket -> bucket name -> upload -> employees.csv
 
 5.Open lambda function and check logs (Monitor) (use json formatter on web to visualize the json data from the log)
 
+-------------
+SNS (works on pull model):
+
+1.Topic -> standard -> sns-topic -> create topic
+Inside topic:
+--create subscription -> protocol:email, endpoint:email address
+--open mail and confirm subscription
+--publish messgae
+
+2.Alter lambda function and use code (https://github.com/SHUBH-17/AWS/blob/main/sns_notification_from_lambda.py)
+note: sns_arn should be the arn of the topic created above
+
+3.open IAM -> roles -> copy/select lambda role -> add permission (attach policy:SNSFullAccess)
+
+4.s3 bucket -> bucket name -> upload -> employees.csv
+
+5.open mail and check message is published
+-------------
+EC2:
+1.launch instance 
+name:ec2-demo
+OS: amazon linux 2023 ami (free tier eligible)
+instance type : t2.micro (free tier eligible)
+key pair login -> create key pair -> ec2-key (.pem file gets downloaded)
+launch instance
+
+2.Come to ec2 homepage and click instances 
+select instance -> connect -> SSH client -> copy command
+open terminal and go to directory where .pem file is located:
+> chmod 400 *.pem (provide pem file name).
+> paste the command to connect to the remote server/ec2 instance.
+ec2 instance> mkdir shubh
+ec2 instance> ls
+ec2 instance>
+
+
+select instance -> instance state -> stop/terminate (avoids unneccessary charges)
+
+-------------
+rds and emr
 
 
 
 
 
+-------------
 Notes:
 1.lambda has memory constraint and timeout constraint (15 min limit) and thats why cannot be used for heavy computation and loading high volume data.
 (use lambda function to handle other libraries for triggering a job to do such heavy computaion and data load for any event driven pipeline)
