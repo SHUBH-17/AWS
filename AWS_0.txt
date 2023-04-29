@@ -74,7 +74,7 @@ launch instance
 
 2.Come to ec2 homepage and click instances 
 select instance -> connect -> SSH client -> copy command
-open terminal and go to directory where .pem file is located:
+open terminal  (ec2 command line) and go to directory where .pem file is located:
 > chmod 400 *.pem (provide pem file name).
 > paste the command to connect to the remote server/ec2 instance.
 ec2 instance> mkdir shubh
@@ -87,9 +87,29 @@ select instance -> instance state -> stop/terminate (avoids unneccessary charges
 -------------
 rds and emr
 
+1. RDS -> create database (easy create, MySQL, free tier, DB instance : demo-rds, username-password)
+
+2.database -> demo-rds (status:active) -> Actions -> setup ec2 connection -> select ec2 instance (eg. ec2-demo created above if under same vpc as rds or ec2-for-rds-connect created on same vpc) -> confirm and setup
+name:ec2-for-rds-connect, 
+ec2-key created above can be used
+launch instance
+
+A virtual private cloud (VPC) is a private cloud computing environment contained within a public cloud.
 
 
+3. creating tunnel 
+Instance -> ec2-for-rds-connect -> connect -> connection details (hostname)
+(details required: endpoint,port,username-password) (local port: 3336, local host: 127.0.0.1)
+terminal on local machine where .pem file is located:
+> ssh -i "ec2-key.pem" -L 3336:endpoint:port hostname -N -f
+> lsof -i4 -P | grep -i "listen" | grep 3336
+> nc -zv 127.0.0.1 3336
+> mysql -h 127.0.0.1 -P 3336 -u admin -p
+(MySQL instance):
+mysql> show databases;  
 
+
+Task: try connecting (MySQL instance) using python and workbench instead of using ec2 command line
 
 -------------
 Notes:
@@ -100,6 +120,16 @@ Notes:
 documentation links:
 https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-examples.html
 
+
+------------------------------------------------------------------------------------------------------
+-------------
+23/04/2023
+-------------
+
+
+
+
+------------------------------------------------------------------------------------------------------
 
 
 
