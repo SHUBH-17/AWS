@@ -85,17 +85,14 @@ ec2 instance>
 select instance -> instance state -> stop/terminate (avoids unneccessary charges)
 
 -------------
-rds and emr
+RDS 
 
 1. RDS -> create database (easy create, MySQL, free tier, DB instance : demo-rds, username-password)
 
 2.database -> demo-rds (status:active) -> Actions -> setup ec2 connection -> select ec2 instance (eg. ec2-demo created above if under same vpc as rds or ec2-for-rds-connect created on same vpc) -> confirm and setup
-name:ec2-for-rds-connect, 
+name:ec2-for-rds-connect 
 ec2-key created above can be used
 launch instance
-
-A virtual private cloud (VPC) is a private cloud computing environment contained within a public cloud.
-
 
 3. creating tunnel 
 Instance -> ec2-for-rds-connect -> connect -> connection details (hostname)
@@ -108,30 +105,107 @@ terminal on local machine where .pem file is located:
 (MySQL instance):
 mysql> show databases;  
 
-
-Task: try connecting (MySQL instance) using python and workbench instead of using ec2 command line
-
+pause/delete/terminate the cluster
 -------------
 Notes:
 1.lambda has memory constraint and timeout constraint (15 min limit) and thats why cannot be used for heavy computation and loading high volume data.
 (use lambda function to handle other libraries for triggering a job to do such heavy computaion and data load for any event driven pipeline)
 
-
 documentation links:
 https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-examples.html
 
+A virtual private cloud (VPC) is a private cloud computing environment contained within a public cloud.
 
+Task: try connecting (MySQL instance) using python or workbench instead of using ec2 command line
 ------------------------------------------------------------------------------------------------------
 -------------
 23/04/2023
 -------------
+EMR (NO free tier service) - can be used for practising/using applications like hadoop, spark, hive etc  (service for distributed computation)
+
+1.Create Cluster:
+name: emr-demo
+emr release : emr-5.36.0
+Application bundle: custom bundle(hadoop,hue,spark,hcatalog,hive)
+create key pair or use ec2-key created above
+service role: emr-default-role
+instance role: emr-ec2-default-role
+if no roles are shown then create role:
+IAM -> Roles -> Create Role -> aws service -> EMR -> EMR -> emr-default-role -> create role
+IAM -> Roles -> Create Role -> aws service -> EMR -> EMR Role for EC2 -> emr-ec2-default-role -> create role
+create cluster
+
+once the cluster gets created and status is available:
+-> click on link: connect to primary node using ssh
+-> copy command
+-> open local terminal where .pem file is located and paste the command
+> command
+> fingerprint? yes
+hadoop> hdfs dfs -ls /
+hadoop> hdfs dfs -mkdir /input_data (confirm on hdfs name node url present on the emr cluster)
+hadoop> hive
+hive> show databases;
+hive> exit
+hadoop> pyspark
+>>> from pyspark.sql import SparkSession
+>>> exit()
+hadoop> clear
+hadoop> spark-submit
+
+pause/delete/terminate the cluster
+
+-------------
+Redshift (Data Warehousing service)
+1.Create cluster:
+name: demo-red-shift-cluster
+select load sample data
+admin user name: admin
+admin password: admin
+Associated IAM roles: create IAM role (any s3 bucket) -> Create
+create cluster
+
+once the cluster gets created and status is available:
+-> click query data (editor v2)
+under demo-red-shift-cluster and dev DB :
+select * from public.category limit 100;
+
+pause/delete/terminate the cluster
+
+-------------
+Glue (Managed ETL service)
+#employee csv file uploaded on s3 bucket (source folder for the crawler)
+
+1.Crawlers -> create crawler
+Name: csv-crawler
+Description: This will crawl the data which is residing in S3 bucket and file name is employees.csv
+Add a data source -> S3 -> bucket name -> folder -> choose -> add 
+select above data source
+create IAM role (AWSGlueServiceRole-Glue-EZCRC-s3Policy ): s3FullAccess,dynamodbfullaccess,glueservicerole,redshifyfullaccess,glueconsolefullaccess
+add database(to store metadata):
+DB name: demo-db 
+Table prefix: employee_
+create crawler
+
+select csv-crawler and click run (once completed check the table for metadata it created)
+
+databases -> demo-db -> click on table name -> shows/stores the schema (metadata) of the source file
 
 
 
+
+
+
+-------------
+links and notes:
+https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html
+https://docs.aws.amazon.com/redshift/index.html
+https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-sql.html
+
+Crawlers can also validate the schema of the input source.
+Catalog acts as a middle layer between the actual code and actual data source.
 
 ------------------------------------------------------------------------------------------------------
 
-
-
+select instance -> instance state -> stop/terminate (avoids unneccessary charges)
 
 ------------------------------------------------------------------------------------------------------
