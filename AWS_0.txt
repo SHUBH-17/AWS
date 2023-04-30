@@ -174,8 +174,9 @@ pause/delete/terminate the cluster
 -------------
 Glue (Managed ETL service)
 #employee csv file uploaded on s3 bucket (source folder for the crawler)
-
-1.Crawlers -> create crawler
+--Crawlers and Catalog
+1.Crawlers 
+-> create crawler
 Name: csv-crawler
 Description: This will crawl the data which is residing in S3 bucket and file name is employees.csv
 Add a data source -> S3 -> bucket name -> folder -> choose -> add 
@@ -187,11 +188,30 @@ Table prefix: employee_
 create crawler
 
 select csv-crawler and click run (once completed check the table for metadata it created)
-
 databases -> demo-db -> click on table name -> shows/stores the schema (metadata) of the source file
 
+2.Glue Job
+ETL jobs 
 
+A.visual with a source and  target (simple drag and drop)
+source: amazon s3
+target: amazon redshift
+create
+click source -> data catalog table -> demo-db -> table name 
+click destination -> redshift connection (create if not exist using the connection option in glue service)
 
+B.Spark script editor
+create (Employee_Data_Processing)
+script: https://github.com/SHUBH-17/AWS/blob/main/glue_spark_script.py
+save
+IAM role: AWSGlueServiceRole-Glue
+Requested No of workers: 2
+Job Parameter : key: --JOB_NAME, value: first_glue_job
+save
+
+ETL jobs -> Employee_Data_Processing -> run
+click job run monitoring
+cloudwatch logs
 
 
 
@@ -200,6 +220,7 @@ links and notes:
 https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html
 https://docs.aws.amazon.com/redshift/index.html
 https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-sql.html
+https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-python-extensions.html
 
 Crawlers can also validate the schema of the input source.
 Catalog acts as a middle layer between the actual code and actual data source.
