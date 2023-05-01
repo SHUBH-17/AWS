@@ -11,13 +11,12 @@ args = getResolvedOptions(sys.argv, ['JOB_NAME'])
 sc = SparkContext()
 glueContext = GlueContext(sc)
 spark = glueContext.spark_session
-
-job = Job(GlueContext)
+job = Job(glueContext)
 job.init(args['JOB_NAME'], args)
 
 empDf = glueContext.create_dynamic_frame.from_catalog(
-    database="batch2-database",
-    table_name="employee_batch2_s3_data"
+    database="batch2_catalog_db",
+    table_name="employee_batch2_s3_data",
     transformation_ctx="s3_input_new"
     )
 
