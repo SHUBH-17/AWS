@@ -202,7 +202,7 @@ click destination -> redshift connection (create if not exist using the connecti
 
 B.Spark script editor
 create (Employee_Data_Processing)
-script: https://github.com/SHUBH-17/AWS/blob/main/glue_spark_script.py
+script: https://github.com/SHUBH-17/AWS/blob/main/glue_spark_script.py (confirm db and table name)
 save
 IAM role: AWSGlueServiceRole-Glue
 Requested No of workers: 2
@@ -212,8 +212,6 @@ save
 ETL jobs -> Employee_Data_Processing -> run
 click job run monitoring
 cloudwatch logs
-
-
 
 -------------
 links and notes:
@@ -226,7 +224,24 @@ Crawlers can also validate the schema of the input source.
 Catalog acts as a middle layer between the actual code and actual data source.
 
 ------------------------------------------------------------------------------------------------------
+-------------
+29/04/2023
+-------------
+Glue Job: Processing incremental data load
+create a glue job Spark script editor ()
+script: https://github.com/SHUBH-17/AWS/blob/main/incremental_data_load_in_glue.py  (confirm db and table name)
+job property: enable bookmark
 
+create Crawlers and Catalog
+
+delete and upload the employees.csv file in s3
+check count in logs :50
+
+upload another file employees_2.csv file in s3 with 4 records
+check count in logs :04
+
+
+
+------------------------------------------------------------------------------------------------------
 select instance -> instance state -> stop/terminate (avoids unneccessary charges)
-
 ------------------------------------------------------------------------------------------------------
